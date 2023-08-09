@@ -28,6 +28,7 @@ public class AccountController {
         List<AccountDTO> listConverted= allAccounts.stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
         return listConverted;
     }
+
     @GetMapping("/accounts/{id}")
     public AccountDTO getAccountById(@PathVariable Long id){
         Optional<Account> accountOptional=accountRepository.findById(id);

@@ -25,6 +25,7 @@ public class TransactionDTO {
         return id;
     }
 
+
     public TransactionType getType() {
         return type;
     }

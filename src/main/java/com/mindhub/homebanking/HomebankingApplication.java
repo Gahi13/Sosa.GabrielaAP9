@@ -47,6 +47,7 @@ public class HomebankingApplication {
 			transactionRepository.save(newTransaction3);
 
 
+
 					//nuevo cliente 1 (inventado)
 			Client client1= new Client("Gabriela", "sosa", "sosa@gmail");
 			clientRepository.save(client1);

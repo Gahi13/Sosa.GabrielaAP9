@@ -72,6 +72,7 @@ public class Account {
         return transactions;
     }
 
+
     public void addTransaction(Transaction transaction){
         transaction.setAccount(this);
         transactions.add(transaction);
