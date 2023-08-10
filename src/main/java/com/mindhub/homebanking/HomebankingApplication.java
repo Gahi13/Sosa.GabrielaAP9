@@ -36,7 +36,7 @@ public class HomebankingApplication {
 			client.addAccount(newAccount2);
 			accountRepository.save(newAccount2);
 						//nuevas transacciones para las cuentas del cliente 1
-			Transaction newTransaction1= new Transaction(TransactionType.DEBIT, 1235.2, "aca va la descripcion de la transaction 1", today);
+			Transaction newTransaction1= new Transaction(TransactionType.DEBIT, -1235.2, "aca va la descripcion de la transaction 1", today);
 			newAccount1.addTransaction(newTransaction1); 	//transaccion para la cuenta 1 de cliente 1
 			transactionRepository.save(newTransaction1);
 			Transaction newTransaction2= new Transaction(TransactionType.CREDIT, 123654.2, "otra desctripcion", today);
