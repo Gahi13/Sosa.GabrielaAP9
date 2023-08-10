@@ -36,13 +36,13 @@ public class HomebankingApplication {
 			client.addAccount(newAccount2);
 			accountRepository.save(newAccount2);
 						//nuevas transacciones para las cuentas del cliente 1
-			Transaction newTransaction1= new Transaction(TransactionType.debit, -1235.2, "aca va la descripcion de la transaction 1", today);
+			Transaction newTransaction1= new Transaction(TransactionType.DEBIT, 1235.2, "aca va la descripcion de la transaction 1", today);
 			newAccount1.addTransaction(newTransaction1); 	//transaccion para la cuenta 1 de cliente 1
 			transactionRepository.save(newTransaction1);
-			Transaction newTransaction2= new Transaction(TransactionType.credit, 123654.2, "otra desctripcion", today);
+			Transaction newTransaction2= new Transaction(TransactionType.CREDIT, 123654.2, "otra desctripcion", today);
 			newAccount2.addTransaction(newTransaction2); 	//transaccion para la cuenta 2 del cliente 1
 			transactionRepository.save(newTransaction2);
-			Transaction newTransaction3= new Transaction(TransactionType.credit, 365494.2, "una descripcion", today);
+			Transaction newTransaction3= new Transaction(TransactionType.CREDIT, 365494.2, "una descripcion", today);
 			newAccount1.addTransaction(newTransaction3); 	//transaccion para la cuenta 2 del cliente 1
 			transactionRepository.save(newTransaction3);
 
@@ -54,7 +54,7 @@ public class HomebankingApplication {
 			Account account1= new Account("VIN003", today, 600.0);
 			client1.addAccount(account1);
 			accountRepository.save(account1);
-			Transaction transaction1= new Transaction(TransactionType.credit, 1254.2, "No tengo imaginacion", today);
+			Transaction transaction1= new Transaction(TransactionType.CREDIT, 1254.2, "No tengo imaginacion", today);
 			account1.addTransaction(transaction1);
 			transactionRepository.save(transaction1);
 
