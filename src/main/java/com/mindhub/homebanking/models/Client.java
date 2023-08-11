@@ -5,7 +5,10 @@ import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Client {
@@ -20,6 +23,8 @@ public class Client {
     //propiedad de la cuenta
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     Set<Account> accounts = new HashSet<>();
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
+    Set<ClientLoan> clientLoans = new HashSet<>();
     public Client(){
     }
 
@@ -69,9 +74,25 @@ public class Client {
         this.accounts = accounts;
     }
 
+    public Set<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void setClientLoans(Set<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
     public  void addAccount(Account account){
         account.setClient(this);
         accounts.add(account);
+    }
+    public void addLoan(ClientLoan clientLoan){
+        clientLoan.setClient(this);
+        clientLoans.add(clientLoan);
+
+    }
+    public List<Loan> getLoans(){
+        return clientLoans.stream().map(loan -> loan.getLoan()).collect(toList());
     }
 
 }
