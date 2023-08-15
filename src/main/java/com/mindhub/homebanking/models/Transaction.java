@@ -21,7 +21,6 @@ public class Transaction {
     private Account account;
 
     public Transaction(){
-
     }
     public Transaction(TransactionType type, Double amount, String description, LocalDate date) {
         this.type = type;

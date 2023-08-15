@@ -12,7 +12,7 @@ public class AccountDTO {
     private String number;
     private LocalDate creationDate;
     private Double balance;
-    private Set<TransactionDTO> transactions= new HashSet<>();
+    private Set<TransactionDTO> transactions;
     public AccountDTO(Account account){
         id= account.getId();
         number= account.getNumber();
@@ -23,44 +23,33 @@ public class AccountDTO {
                 .map(transaction -> new TransactionDTO(transaction))
                 .collect(Collectors.toSet());
     }
-
-
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public String getNumber() {
         return number;
     }
-
     public void setNumber(String number) {
         this.number = number;
     }
-
     public LocalDate getDate() {
         return creationDate;
     }
-
     public void setDate(LocalDate date) {
         creationDate = creationDate;
     }
-
     public Double getBalance() {
         return balance;
     }
-
     public void setBalance(Double balance) {
         this.balance = balance;
     }
-
     public Set<TransactionDTO> getTransactions() {
         return transactions;
     }
-
     public void setTransactions(Set<TransactionDTO> transactions) {
         this.transactions = transactions;
     }

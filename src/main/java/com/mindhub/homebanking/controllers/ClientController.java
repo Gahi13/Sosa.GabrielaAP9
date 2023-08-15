@@ -19,22 +19,16 @@ import java.util.stream.Collectors;
 
 
 public class ClientController {
-
     @Autowired
     private ClientRepository clientRepository;
 
     @GetMapping("/clients")
     public List<ClientDTO> getClients(){
-        List<Client> allClients=clientRepository.findAll();
-        List<ClientDTO> convertedList = allClients.stream().map(client -> new ClientDTO(client)).collect(Collectors.toList());
-        return convertedList;
-
+        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(Collectors.toList());
     }
     @GetMapping("/clients/{id}")
     public ClientDTO getClientById(@PathVariable Long id){
         Optional<Client> clientOptional =clientRepository.findById(id);
-
         return new ClientDTO(clientOptional.get());
     }
-
 }

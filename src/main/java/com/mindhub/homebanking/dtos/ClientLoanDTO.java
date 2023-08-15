@@ -11,10 +11,8 @@ public class ClientLoanDTO {
     private Long idPrestamo;
     private String name;
     private Double amount;
-
     private Integer payments ;
     private Set<ClientDTO> clientLoans = new HashSet<>();
-
     public ClientLoanDTO(ClientLoan clientLoan){
         id=clientLoan.getId();
         idPrestamo= clientLoan.getLoan().getId();
@@ -22,27 +20,21 @@ public class ClientLoanDTO {
         amount= clientLoan.getAmount();
         payments=clientLoan.getPayments();
     }
-
     public Long getId() {
         return id;
     }
-
     public Long getIdPrestamo() {
         return idPrestamo;
     }
-
     public String getName() {
         return name;
     }
-
     public Double getAmount() {
         return amount;
     }
-
     public Integer getPayments() {
         return payments;
     }
-
     public Set<ClientDTO> getClientLoans() {
         return clientLoans;
     }

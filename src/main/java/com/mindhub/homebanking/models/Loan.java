@@ -22,16 +22,14 @@ public class Loan {
     @Column(name="payments")
     private List<Integer> payments = new ArrayList<>();
     @OneToMany(mappedBy="loan", fetch=FetchType.EAGER)
-    Set<ClientLoan> clientLoans = new HashSet<>();
+    private Set<ClientLoan> clientLoans = new HashSet<>();
     public Loan(){
-
     }
     public Loan( String name, Double maxAmount, List<Integer> payments) {
         this.name = name;
         this.maxAmount = maxAmount;
         this.payments = payments;
     }
-
     public Long getId() {
         return id;
     }
