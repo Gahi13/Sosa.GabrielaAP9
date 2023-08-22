@@ -25,15 +25,15 @@ class WebAuthorization {
 
                 .antMatchers("/web/public/**", "/web/css/**", "/web/js/**", "/web/index.html", "/web/img/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-                .antMatchers("/web/accounts.html").hasAuthority("CLIENT")
+                .antMatchers("/web/accounts.html").hasAnyAuthority("CLIENT", "ADMIN")
                 .antMatchers("/web/cards.html").hasAuthority("CLIENT")
                 .antMatchers("/web/loans.html").hasAuthority("CLIENT")
                 .antMatchers("/web/transfers.html").hasAuthority("CLIENT")
                 .antMatchers("/api/clients/current").hasAuthority("CLIENT")
-                .antMatchers(HttpMethod.POST,"/api/clients").permitAll()
-                .antMatchers("/web/accounts.html").hasAuthority("ADMIN")
                 .antMatchers("/**").hasAuthority("ADMIN")
-                .antMatchers("/rest/**").hasAuthority("/h2-console");
+                .antMatchers(HttpMethod.POST,"/api/clients").permitAll()
+                .antMatchers("/rest/**").hasAuthority("ADMIN")
+                .antMatchers("/h2-console").hasAuthority("ADMIN");
 
         http.formLogin()
 
