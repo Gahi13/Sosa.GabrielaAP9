@@ -3,17 +3,20 @@ package com.mindhub.homebanking;
 import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @SpringBootApplication
 public class HomebankingApplication {
-
+	@Autowired
+	private PasswordEncoder passwordEnconder;
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
@@ -22,7 +25,7 @@ public class HomebankingApplication {
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args )-> {
 			//nuevo cliente (Melba)
-			Client client= new Client("Melba", "Morel", "melba@mindhub.com");
+			Client client= new Client("Melba", "Morel", "melba@mindhub.com", passwordEnconder.encode("123"));
 			clientRepository.save(client);
 						//nuevas cuentas para cliente
 			LocalDate today =  LocalDate.now();
@@ -47,7 +50,7 @@ public class HomebankingApplication {
 
 
 					//nuevo cliente 1 (inventado)
-			Client client1= new Client("Gabriela", "sosa", "sosa@gmail");
+			Client client1= new Client("Gabriela", "sosa", "sosa@gmail", passwordEnconder.encode("456"));
 			clientRepository.save(client1);
 			Account account1= new Account("VIN003", today, 600.0);
 			client1.addAccount(account1);
@@ -85,6 +88,9 @@ public class HomebankingApplication {
 			client1.addCard(newCardClient1);
 			cardRepository.save(newCardClient1);
 
+
+			Client admin= new Client("admin", "admin", "admin@gamail.com", passwordEnconder.encode("789"));
+			clientRepository.save(admin);
 		};
 
 	}
