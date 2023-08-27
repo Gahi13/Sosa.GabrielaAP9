@@ -1,4 +1,5 @@
 Vue.createApp({
+
     data() {
         return {
             clientInfo: {},
@@ -11,7 +12,6 @@ Vue.createApp({
             axios.get("/api/clients/current")
                 .then((response) => {
                     //get client ifo
-                    console.log(response)
                     this.clientInfo = response.data;
                 })
                 .catch((error) => {

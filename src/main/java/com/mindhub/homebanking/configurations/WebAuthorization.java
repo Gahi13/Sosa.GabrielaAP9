@@ -24,14 +24,19 @@ class WebAuthorization {
         http.authorizeRequests()
 
                 .antMatchers("/web/public/**", "/web/css/**", "/web/js/**", "/web/index.html", "/web/img/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-                .antMatchers("/web/accounts.html").hasAnyAuthority("CLIENT", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/login", "/api/clients").permitAll()
+                .antMatchers("/web/**").hasAnyAuthority("CLIENT", "ADMIN")
+                .antMatchers("/api/accounts").hasAuthority("CLIENT")
+                .antMatchers("/api/accounts/{id}").hasAuthority("CLIENT")
+                .antMatchers("/api/clients/current/accounts").hasAuthority("CLIENT")
+                .antMatchers("/api/clients/current/cards").hasAuthority("CLIENT")
+                .antMatchers("/web/create-cards.html").hasAuthority("CLIENT")
                 .antMatchers("/web/cards.html").hasAuthority("CLIENT")
                 .antMatchers("/web/loans.html").hasAuthority("CLIENT")
                 .antMatchers("/web/transfers.html").hasAuthority("CLIENT")
                 .antMatchers("/api/clients/current").hasAuthority("CLIENT")
                 .antMatchers("/**").hasAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST,"/api/clients").permitAll()
+
                 .antMatchers("/rest/**").hasAuthority("ADMIN")
                 .antMatchers("/h2-console").hasAuthority("ADMIN");
 
