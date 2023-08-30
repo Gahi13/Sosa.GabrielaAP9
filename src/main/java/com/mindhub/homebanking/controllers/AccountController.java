@@ -27,10 +27,21 @@ public class AccountController {
     public List<AccountDTO>getAccounts(){
         return  accountRepository.findAll().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
     }
+    @RequestMapping("/clients/current/accounts")
+    public List<AccountDTO> getAccount( Authentication authentication) {
+        Client client= clientRepository.findByEmail(authentication.getName()) ;
+        return client.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
+
+    }
     @GetMapping("/accounts/{id}")
-    public AccountDTO getAccountById(@PathVariable Long id){
-        Optional<Account> accountOptional=accountRepository.findById(id);
-        return new AccountDTO(accountOptional.get());
+    public ResponseEntity<Object> getAccountById(@PathVariable Long id, Authentication authentication){
+        Client client = clientRepository.findByEmail(authentication.getName());
+        Account account= accountRepository.findByIdAndClient(id, client);
+
+        if (account == null) {
+            return new ResponseEntity<>("no autorizado", HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(new AccountDTO(account), HttpStatus.ACCEPTED);
     }
 
     @Autowired
@@ -61,23 +72,7 @@ public class AccountController {
     }
 
 
-    //veo que la cuenta sea del cliente
-    @RequestMapping("/clients/current/accounts")
-    public ResponseEntity<Object> getAccount(@PathVariable Long id, Authentication authentication) {
 
-       Client client= clientRepository.findByEmail(authentication.getName()) ;
-       Account account= accountRepository.findById(id).orElse(null);
-       if (account == null){
-           return new ResponseEntity<>("Cuenta no valida", HttpStatus.BAD_GATEWAY);
-       }
 
-           if (account.getClient().equals(client)) {
-               AccountDTO accountDTO = new AccountDTO(account);
-               return new ResponseEntity(accountDTO, HttpStatus.ACCEPTED);
-           } else {
-               return new ResponseEntity<>("Esta cuenta no pertenece al cliente", HttpStatus.I_AM_A_TEAPOT);
-           }
-
-    }
 
 }
