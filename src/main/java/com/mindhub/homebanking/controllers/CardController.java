@@ -37,10 +37,13 @@ public class CardController {
     public ResponseEntity<Object> newCard(
             @RequestParam CardColor cardColor, @RequestParam CardType cardType, Authentication authentication) {
         Client client = clientRepository.findByEmail(authentication.getName());
+
         long cuentaDelMismoType= client.getCards().stream().filter(card -> card.getType()==cardType).count();
-        if ( cuentaDelMismoType >= 3) {
-            return new ResponseEntity<>("No se pudo crear una nueva tarjeta: Usted ya llegó al limite de numeros de tarjetas registradas", HttpStatus.FORBIDDEN);
+        long cardDelMismoTypeAndColor= client.getCards().stream().filter(card -> card.getType()==cardType && card.getColor()== cardColor).count();
+        if(cardDelMismoTypeAndColor >=1 || cuentaDelMismoType >= 3){
+            return new ResponseEntity<>("Ya existe este color de tarjeta", HttpStatus.FORBIDDEN);
         }
+
 
         int createCvv =getRandomNumber(0,999);
         String createNumberCard= getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999);
