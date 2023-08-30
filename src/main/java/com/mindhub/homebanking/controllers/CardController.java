@@ -72,6 +72,5 @@ public class CardController {
         } else {
             return new ResponseEntity<>("Esta cuenta no pertenece al cliente", HttpStatus.I_AM_A_TEAPOT);
         }
-
     }
     }
