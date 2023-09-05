@@ -5,10 +5,7 @@ import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.dtos.LoanApplicationDTO;
 import com.mindhub.homebanking.dtos.LoanDTO;
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.LoanRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +34,8 @@ public class LoanController {
     private ClientRepository clientRepository;
     @Autowired
     private TransactionRepository transactionRepository;
-
+    @Autowired
+    private ClientLoanRepository clientLoanRepository;
 
     @PostMapping("/loans")
     @Transactional
@@ -48,31 +46,42 @@ public class LoanController {
         int getPayments= loanApplicationDTO.getPayments();
         long getLoanIds= loanApplicationDTO.getLoanId();
         String getToAccountNumber= loanApplicationDTO.getToAccountNumber();
-
+        Loan loan= loanRepository.findLoanById(loanApplicationDTO.getLoanId());
+        List<Integer> payments= loan.getPayments();
         if(getAmounts<=0 || getPayments<=0){
             return new ResponseEntity<>("datos incorrectos", HttpStatus.BAD_REQUEST);
         }
-        Optional<Loan> optionalLoan= loanRepository.findById(getLoanIds);
-        if(optionalLoan.isEmpty()){
+
+        if(loan == null){
             return new ResponseEntity<>("el prestamo no existe", HttpStatus.BAD_REQUEST);
         }
-        Loan loan= optionalLoan.get();
+        if(loan.getMaxAmount()<getAmounts){
+            return new ResponseEntity<>("Usted se excedio del monto permitido", HttpStatus.FORBIDDEN);
+        }
+        if(!payments.contains(getPayments)){
+            return new ResponseEntity<>("No existe esa cantidad de cuotas para ese prestamo", HttpStatus.FORBIDDEN);
+        }
+        //Loan loan= optionalLoan.get();
         Account numberAccount=accountRepository.findByNumber(getToAccountNumber);
         if(!numberAccount.getClient().equals(client)){
             return new ResponseEntity<>("la cuenta de destino no pertenece al clente", HttpStatus.BAD_REQUEST);
         }
-        Loan getLoan= optionalLoan.get();
+
+
         double credit=  getAmounts+(0.20*getAmounts);
-        String description= getLoan.getName() + " Loan approved";
+        String description= loan.getName() + " Loan approved";
+        ClientLoan newLoan= new ClientLoan(credit, getPayments, client, loan );
+        loan.addLoans(newLoan);
+        client.addLoan(newLoan);
+        clientRepository.save(client);
 
         accountRepository.findByNumber(getToAccountNumber).setBalance(accountRepository.findByNumber(getToAccountNumber).getBalance()+credit);
 
         Transaction transactionCredit= new Transaction(TransactionType.CREDIT, credit, description, LocalDate.now());
         numberAccount.addTransaction(transactionCredit);
         transactionRepository.save(transactionCredit);
-        accountRepository.save(accountRepository.findByNumber(getToAccountNumber));
-        Loan newLoan= new Loan(getLoan.getName(),getAmounts, getLoan.getPayments() );
-        loanRepository.save(loan);
+        accountRepository.save(numberAccount);
+        clientLoanRepository.save(newLoan);
         return new ResponseEntity<>("aceptado", HttpStatus.ACCEPTED);
 
     }
