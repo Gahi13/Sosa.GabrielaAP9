@@ -1,13 +1,10 @@
 package com.mindhub.homebanking.controllers;
 
-import com.mindhub.homebanking.dtos.AccountDTO;
 import com.mindhub.homebanking.dtos.CardDTO;
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.CardRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.CardService;
 import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.utils.CardUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -55,16 +50,15 @@ public class CardController {
         }
 
 
-        int createCvv =getRandomNumber(0,999);
-        String createNumberCard= getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999)+"-"+getRandomNumber(0,9999);
+        //int createCvv =getRandomNumber(0,999);
+        int createCvv = CardUtils.getRandomNumber(0,999);
+        String createNumberCard= CardUtils.getRandomNumber(0,9999)+"-"+ CardUtils.getRandomNumber(0,9999)+"-"+ CardUtils.getRandomNumber(0,9999)+"-"+ CardUtils.getRandomNumber(0,9999);
         Card newCard= new Card(client.getFirstName() + client.getLastName(),cardType, cardColor, createNumberCard, createCvv, LocalDate.now().plusYears(5), LocalDate.now());
         client.addCard(newCard);
         cardService.save(newCard);
         return new ResponseEntity<>("tarjeta creada", HttpStatus.CREATED);
     }
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
-    }
+
 
 
     @RequestMapping("/clients/current/cards")

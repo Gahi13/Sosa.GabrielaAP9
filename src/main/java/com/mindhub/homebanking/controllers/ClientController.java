@@ -8,6 +8,7 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.utils.ClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,11 @@ public class ClientController {
     public ClientDTO getClientById(@PathVariable Long id) {
         return clientService.getClientDTO(id);
     }
-
-
         @Autowired
         private PasswordEncoder passwordEncoder;
         @Autowired
         private AccountService accountService;
-        @RequestMapping(path = "/clients", method = RequestMethod.POST)
+        @PostMapping("/clients")
         public ResponseEntity<Object> register(
                 @RequestParam String firstName, @RequestParam String lastName,
                 @RequestParam String email, @RequestParam String password) {
@@ -58,7 +57,7 @@ public class ClientController {
             clientService.save(newClient);
             boolean uniqueNumber = false;
             while(!uniqueNumber){
-                int numberRandom = getRandomNumber(0, 99999999);
+                int numberRandom = ClientUtils.getRandomNumber(0, 99999999);
                 String numberAccount= "VIN-"+numberRandom;
                 if(accountService.findByNumber(numberAccount)== null){
                     uniqueNumber=true;
@@ -71,17 +70,10 @@ public class ClientController {
 
 
         }
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
-    }
-
-
-        @RequestMapping("/clients/current")
-
+        @GetMapping("/clients/current")
         public ClientDTO getAll(Authentication authentication) {
 
             return clientService.getAll(authentication.getName());
         }
-
 
 }

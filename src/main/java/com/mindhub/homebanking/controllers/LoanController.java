@@ -77,7 +77,7 @@ public class LoanController {
         client.addLoan(newLoan);
         clientService.save(client);
 
-        accountService.findByNumber(getToAccountNumber).setBalance(accountService.findByNumber(getToAccountNumber).getBalance()+credit);
+        numberAccount.setBalance( numberAccount.getBalance()+credit);
 
         Transaction transactionCredit= new Transaction(TransactionType.CREDIT, credit, description, LocalDate.now());
         numberAccount.addTransaction(transactionCredit);

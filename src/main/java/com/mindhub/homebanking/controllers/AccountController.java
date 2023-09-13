@@ -8,6 +8,7 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.utils.ClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class AccountController {
     public List<AccountDTO>getAccounts(){
         return  accountService.getAccounts();
     }
-    @RequestMapping("/clients/current/accounts")
+    @GetMapping("/clients/current/accounts")
     public List<AccountDTO> getAccount( Authentication authentication) {
         Client client= clientService.findByEmail(authentication.getName()) ;
         return client.getAccounts().stream().map(account -> new AccountDTO(account)).collect(Collectors.toList());
@@ -59,7 +60,7 @@ public class AccountController {
         }
         boolean uniqueNumber = false;
         while(!uniqueNumber){
-            int numberRandom = getRandomNumber(0, 99999999);
+            int numberRandom = ClientUtils.getRandomNumber(0, 99999999);
             String numberAccount= "VIN-"+numberRandom;
             if(accountService.findByNumber(numberAccount)== null){
                 uniqueNumber=true;
